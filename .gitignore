@@ -1,0 +1,7 @@
+# Visual Studio cache directory
+.vs/*
+bin/
+obj/
+
+#.user 是用户配置，没啥用的
+*.user
