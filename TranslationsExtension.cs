@@ -1,20 +1,16 @@
-﻿using System.Collections;
-using System.IO;
-using System.IO.Compression;
-using Oxide.Core;
+﻿using Oxide.Core;
 using Oxide.Core.Extensions;
-using UnityEngine;
-using UnityEngine.Networking;
 
-namespace TranslationsDownloader {
-
-    public class TranslationsExtension : Extension {
-        private const string TranslationsUrl = "https://crowdin.com/backend/download/project/rust.zip";
-        internal static TranslationsExtension Instance;
+namespace Translations
+{
+    public class TranslationsExtension : Extension
+    {
+        //internal static TranslationsExtension Instance;
         //private GameObject _downloaderObj;
 
         public TranslationsExtension(ExtensionManager manager)
-            : base(manager) {
+            : base(manager)
+        {
         }
 
         public override string Name => "TranslationsDownloader";
@@ -23,31 +19,41 @@ namespace TranslationsDownloader {
 
         public override bool SupportsReloading => true;
 
-        public override void OnModLoad() {
-            Instance = this;
+        //public override void LoadPluginWatchers(string pluginDirectory)
+        //{
+        //    Manager.RegisterPluginLoader(new TranslationsLoader());
+        //}
+
+        public override void OnModLoad()
+        {
+            //Instance = this;
             Manager.RegisterPluginLoader(new TranslationsLoader());
+            //Interface.Oxide.UnloadExtension("Oxide.Ext.TranslationsDownloader");
         }
 
-        public override void OnShutdown() {
-            Shutdown();
-            Instance = null;
-        }
+        //public override void OnShutdown()
+        //{
+        //    Shutdown();
+        //    Instance = null;
+        //}
 
-        internal void Initialize() {
-            MainCamera.Instance.StartCoroutine(DownloadTranslations());
-            //_downloaderObj = new GameObject("TranslationsDownloader");
-            //_downloaderObj.AddComponent<TranslationsDownloader>();
-            //Interface.Oxide.LogError($"Initialize: {_downloaderObj}");
-        }
+        //internal void Initialize()
+        //{
+        //    MainCamera.Instance.StartCoroutine(DownloadTranslations());
+        //    _downloaderObj = new GameObject("TranslationsDownloader");
+        //    _downloaderObj.AddComponent<TranslationsDownloader>();
+        //    Interface.Oxide.LogError($"Initialize: {_downloaderObj}");
+        //}
 
-        internal void Shutdown() {
-            //Interface.Oxide.LogError($"Shutdown: {_downloaderObj}");
-            //if (_downloaderObj != null)
-            //{
-            //    Object.Destroy(_downloaderObj);
-            //    _downloaderObj = null;
-            //}
-        }
+        //internal void Shutdown()
+        //{
+        //    Interface.Oxide.LogError($"Shutdown: {_downloaderObj}");
+        //    if (_downloaderObj != null)
+        //    {
+        //        Object.Destroy(_downloaderObj);
+        //        _downloaderObj = null;
+        //    }
+        //}
 
         //private class TranslationsDownloader : MonoBehaviour
         //{
@@ -98,49 +104,5 @@ namespace TranslationsDownloader {
         //        Interface.Oxide.LogError($"OnDestroy: {this}");
         //    }
         //}
-
-        private IEnumerator DownloadTranslations() {
-            Interface.Oxide.LogWarning("Start downloading all the translation files.");
-            for (int i = 0; i < 5; i++) {
-                using (var unityWebRequest = UnityWebRequest.Get(TranslationsUrl)) {
-                    //unityWebRequest.timeout = 60;
-                    unityWebRequest.SendWebRequest();
-                    while (!unityWebRequest.isDone) {
-                        var downloaded = Mathf.FloorToInt(unityWebRequest.downloadProgress * 100);
-                        if (downloaded > 0 && downloaded % 10 == 0) {
-                            Interface.Oxide.LogInfo($"Downloading all the translation files: {downloaded}%");
-                        }
-                        yield return null;
-                    }
-
-                    //yield return unityWebRequest.SendWebRequest();
-                    if (unityWebRequest.isNetworkError || unityWebRequest.isHttpError) {
-                        Interface.Oxide.LogError($"Failed to download translations. Code:{unityWebRequest.responseCode}. Error:{unityWebRequest.error}");
-                        DoDestroy();
-                        yield return CoroutineEx.waitForSeconds(5f);
-                        continue;
-                    }
-                    Interface.Oxide.LogInfo($"Successfully downloaded all translation files. Downloaded: {unityWebRequest.downloadedBytes / (1024 * 1024):0.00}MB");
-
-                    var extractDirectory = Path.Combine(Interface.Oxide.DataFileSystem.Directory, "Translations");
-                    if (!Directory.Exists(extractDirectory)) {
-                        Directory.CreateDirectory(extractDirectory);
-                    }
-
-                    var translationsZipPath = Path.Combine(Interface.Oxide.DataFileSystem.Directory, "Rust (translations).zip");
-                    File.WriteAllBytes(translationsZipPath, unityWebRequest.downloadHandler.data);
-                    ZipFile.ExtractToDirectory(translationsZipPath, extractDirectory, true);
-                    File.Delete(translationsZipPath);
-                    break;
-                }
-            }
-            Interface.Oxide.LogWarning("All translation files were successfully downloaded and extracted.");
-            DoDestroy();
-        }
-
-        private void DoDestroy() {
-            Interface.Oxide.UnloadPlugin(nameof(TranslationsDownloader));
-            Interface.Oxide.UnloadExtension("Oxide.Ext.TranslationsDownloader");
-        }
     }
 }

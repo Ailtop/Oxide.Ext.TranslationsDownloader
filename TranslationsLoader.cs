@@ -1,9 +1,9 @@
 ﻿using System;
 using Oxide.Core.Plugins;
 
-namespace TranslationsDownloader
+namespace Translations
 {
-    internal class TranslationsLoader : PluginLoader
+    public class TranslationsLoader : PluginLoader
     {
         public override Type[] CorePlugins => new[]
         {
