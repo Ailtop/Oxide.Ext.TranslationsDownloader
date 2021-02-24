@@ -11,11 +11,10 @@ namespace Translations
 {
     public class TranslationsDownloader : CSPlugin
     {
-        private const string TranslationsUrl = "https://crowdin.com/backend/download/project/rust.zip";
+        private const string TranslationsDownloadUrl = "https://crowdin.com/backend/download/project/rust.zip";
 
+        private bool _downloaded;
         private Coroutine _downloadCoroutine;
-
-        //private bool _downloaded;
         private readonly Command _cmd = Interface.Oxide.GetLibrary<Command>();
 
         public TranslationsDownloader()
@@ -25,37 +24,49 @@ namespace Translations
             Title = "Rust Translations Downloader";
             Description = "Download Translations";
             Version = new VersionNumber(1, 0, 0);
-            _cmd.AddConsoleCommand("downloadtranslations", this, nameof(CCmdDownloadTranslations));
+            _cmd.AddConsoleCommand("translations", this, nameof(CCmdTranslations));
         }
 
-        //[HookMethod("OnTerrainInitialized")]
-        //public void OnTerrainInitialized()
-        //{
-        //    if (!_downloaded)
-        //    {
-        //        StartDownload();
-        //    }
-        //}
-
-        [HookMethod("OnServerInitialized")]
-        public void OnServerInitialized()
+        [HookMethod(nameof(OnTerrainInitialized))]
+        private void OnTerrainInitialized()
         {
+            if (!_downloaded)
+            {
+                StartDownload();
+            }
+        }
+
+        [HookMethod(nameof(OnServerInitialized))]
+        private void OnServerInitialized(bool initial)
+        {
+            if (!initial) return;
             //Interface.Oxide.LogError("OnTerrainInitialized");
             //foreach (var singletonComponent in UnityEngine.Object.FindObjectsOfType<SingletonComponent>())
             //{
             //    Interface.Oxide.LogError($"{singletonComponent?.name} : {singletonComponent?.GetType()}");
             //}
             //TranslationsExtension.Instance.Initialize();
-            //if (!_downloaded)
-            //{
-            StartDownload();
-            //}
+            if (!_downloaded)
+            {
+                StartDownload();
+            }
         }
 
-        [HookMethod("CCmdDownloadTranslations")]
-        private void CCmdDownloadTranslations(ConsoleSystem.Arg arg)
+        [HookMethod(nameof(CCmdTranslations))]
+        private void CCmdTranslations(ConsoleSystem.Arg arg)
         {
             if (!arg.IsAdmin) return;
+            if (arg.HasArgs())
+            {
+                if (_downloadCoroutine != null)
+                {
+                    MainCamera.Instance.StopCoroutine(_downloadCoroutine);
+                    Interface.Oxide.LogWarning("Stop downloading the translation files.");
+                    return;
+                }
+                Interface.Oxide.LogWarning("You haven't started downloading the translation files yet.");
+                return;
+            }
             StartDownload();
         }
 
@@ -63,15 +74,15 @@ namespace Translations
         {
             if (_downloadCoroutine != null)
             {
-                ServerMgr.Instance.StopCoroutine(_downloadCoroutine);//MainCamera
+                MainCamera.Instance.StopCoroutine(_downloadCoroutine);//MainCamera
             }
-            _downloadCoroutine = ServerMgr.Instance.StartCoroutine(DownloadTranslations());
+            _downloadCoroutine = MainCamera.Instance.StartCoroutine(DownloadTranslations());
         }
 
         private IEnumerator DownloadTranslations()
         {
             Interface.Oxide.LogWarning("Start downloading the translation files.");
-            using (var unityWebRequest = UnityWebRequest.Get(TranslationsUrl))
+            using (var unityWebRequest = UnityWebRequest.Get(TranslationsDownloadUrl))
             {
                 //unityWebRequest.timeout = 120;
                 //yield return unityWebRequest.SendWebRequest();
@@ -102,8 +113,6 @@ namespace Translations
                     _downloadCoroutine = null;
                     yield break;
                 }
-                Interface.Oxide.LogWarning($"Translation files were successfully downloaded. Downloaded: {unityWebRequest.downloadedBytes / (1024f * 1024f):0.00}MB");
-
                 var extractDirectory = Path.Combine(Interface.Oxide.DataFileSystem.Directory, "Translations");
                 if (!Directory.Exists(extractDirectory))
                 {
@@ -114,10 +123,10 @@ namespace Translations
                 File.WriteAllBytes(translationsZipPath, unityWebRequest.downloadHandler.data);
                 ZipFile.ExtractToDirectory(translationsZipPath, extractDirectory, true);
                 //File.Delete(translationsZipPath);
-                Interface.Oxide.LogWarning($"Translation files were successfully extracted to '{extractDirectory}'.");
+                Interface.Oxide.LogWarning($"Translation files were successfully downloaded({unityWebRequest.downloadedBytes / (1024f * 1024f):0.00}MB) and extracted to '{extractDirectory}'.");
                 Interface.CallHook("OnTranslationsDownloaded");
                 //OnDownloaded();
-                //_downloaded = true;
+                _downloaded = true;
             }
 
             _downloadCoroutine = null;

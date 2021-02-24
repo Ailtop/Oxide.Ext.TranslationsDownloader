@@ -28,7 +28,7 @@ namespace Translations
         {
             //Instance = this;
             Manager.RegisterPluginLoader(new TranslationsLoader());
-            //Interface.Oxide.UnloadExtension("Oxide.Ext.TranslationsDownloader");
+            Interface.Oxide.UnloadExtension("Oxide.Ext.TranslationsDownloader");
         }
 
         //public override void OnShutdown()
