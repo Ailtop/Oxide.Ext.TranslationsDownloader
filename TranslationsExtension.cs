@@ -1,4 +1,5 @@
-﻿using Oxide.Core;
+﻿using System.Reflection;
+using Oxide.Core;
 using Oxide.Core.Extensions;
 
 namespace Translations
@@ -15,7 +16,7 @@ namespace Translations
 
         public override string Name => "TranslationsDownloader";
         public override string Author => "Arainrr";
-        public override VersionNumber Version => new VersionNumber(1, 0, 0);
+        public override VersionNumber Version => new VersionNumber(1, 0, 1);
 
         public override bool SupportsReloading => true;
 
@@ -28,7 +29,7 @@ namespace Translations
         {
             //Instance = this;
             Manager.RegisterPluginLoader(new TranslationsLoader());
-            Interface.Oxide.UnloadExtension("Oxide.Ext.TranslationsDownloader");
+            Interface.Oxide.UnloadExtension(Assembly.GetExecutingAssembly().GetName().Name);
         }
 
         //public override void OnShutdown()

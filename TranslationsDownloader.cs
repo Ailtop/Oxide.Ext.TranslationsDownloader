@@ -23,7 +23,7 @@ namespace Translations
             Name = "TranslationsDownloader";
             Title = "Rust Translations Downloader";
             Description = "Download Translations";
-            Version = new VersionNumber(1, 0, 0);
+            Version = new VersionNumber(1, 0, 1);
             _cmd.AddConsoleCommand("translations", this, nameof(CCmdTranslations));
         }
 
@@ -32,7 +32,7 @@ namespace Translations
         {
             if (!_downloaded)
             {
-                StartDownload();
+                StartDownload(true);
             }
         }
 
@@ -48,7 +48,7 @@ namespace Translations
             //TranslationsExtension.Instance.Initialize();
             if (!_downloaded)
             {
-                StartDownload();
+                StartDownload(true);
             }
         }
 
@@ -67,19 +67,19 @@ namespace Translations
                 Interface.Oxide.LogWarning("You haven't started downloading the translation files yet.");
                 return;
             }
-            StartDownload();
+            StartDownload(false);
         }
 
-        private void StartDownload()
+        private void StartDownload(bool initial)
         {
             if (_downloadCoroutine != null)
             {
                 MainCamera.Instance.StopCoroutine(_downloadCoroutine);//MainCamera
             }
-            _downloadCoroutine = MainCamera.Instance.StartCoroutine(DownloadTranslations());
+            _downloadCoroutine = MainCamera.Instance.StartCoroutine(DownloadTranslations(initial));
         }
 
-        private IEnumerator DownloadTranslations()
+        private IEnumerator DownloadTranslations(bool initial)
         {
             Interface.Oxide.LogWarning("Start downloading the translation files.");
             using (var unityWebRequest = UnityWebRequest.Get(TranslationsDownloadUrl))
@@ -124,7 +124,7 @@ namespace Translations
                 ZipFile.ExtractToDirectory(translationsZipPath, extractDirectory, true);
                 //File.Delete(translationsZipPath);
                 Interface.Oxide.LogWarning($"Translation files were successfully downloaded({unityWebRequest.downloadedBytes / (1024f * 1024f):0.00}MB) and extracted to '{extractDirectory}'.");
-                Interface.CallHook("OnTranslationsDownloaded");
+                Interface.CallHook("OnTranslationsDownloaded", initial);
                 //OnDownloaded();
                 _downloaded = true;
             }

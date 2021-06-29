@@ -35,11 +35,10 @@
     <Reference Include=".\References\*.dll" Exclude=".\References\Newtonsoft.Json.dll">
       <Private>False</Private>
     </Reference>
-    <Compile Include=".\**\*.cs" Exclude=".\obj\**"/>
-    <Folder Include="Properties\" />
+    <Compile Include=".\**\*.cs" Exclude=".\obj\**" />
     <WCFMetadata Include="Connected Services\" />
     <None Include=".editorconfig" />
     <None Include="app.config" />
-  </ItemGroup> 
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
