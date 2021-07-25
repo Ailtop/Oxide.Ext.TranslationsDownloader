@@ -7,7 +7,7 @@ using Oxide.Game.Rust.Libraries;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Translations
+namespace Oxide.Ext.TranslationsDownloader
 {
     public class TranslationsDownloader : CSPlugin
     {
@@ -21,9 +21,9 @@ namespace Translations
         {
             Author = "Arainrr";
             Name = "TranslationsDownloader";
-            Title = "Rust Translations Downloader";
-            Description = "Download Translations";
-            Version = new VersionNumber(1, 0, 1);
+            Title = "Translations Downloader";
+            Description = "Download Translation Files for Rust";
+            Version = new VersionNumber(1, 1, 0);
             _cmd.AddConsoleCommand("translations", this, nameof(CCmdTranslations));
         }
 
@@ -40,12 +40,6 @@ namespace Translations
         private void OnServerInitialized(bool initial)
         {
             if (!initial) return;
-            //Interface.Oxide.LogError("OnTerrainInitialized");
-            //foreach (var singletonComponent in UnityEngine.Object.FindObjectsOfType<SingletonComponent>())
-            //{
-            //    Interface.Oxide.LogError($"{singletonComponent?.name} : {singletonComponent?.GetType()}");
-            //}
-            //TranslationsExtension.Instance.Initialize();
             if (!_downloaded)
             {
                 StartDownload(true);
@@ -74,7 +68,7 @@ namespace Translations
         {
             if (_downloadCoroutine != null)
             {
-                MainCamera.Instance.StopCoroutine(_downloadCoroutine);//MainCamera
+                MainCamera.Instance.StopCoroutine(_downloadCoroutine);
             }
             _downloadCoroutine = MainCamera.Instance.StartCoroutine(DownloadTranslations(initial));
         }
@@ -84,8 +78,6 @@ namespace Translations
             Interface.Oxide.LogWarning("Start downloading the translation files.");
             using (var unityWebRequest = UnityWebRequest.Get(TranslationsDownloadUrl))
             {
-                //unityWebRequest.timeout = 120;
-                //yield return unityWebRequest.SendWebRequest();
                 var asyncOperation = unityWebRequest.SendWebRequest();
                 float timer = 0;
                 while (!asyncOperation.isDone)
@@ -97,19 +89,12 @@ namespace Translations
                         var downloaded = Mathf.FloorToInt(asyncOperation.progress * 100);
                         Interface.Oxide.LogInfo($"Downloading the translation files: {downloaded}%");
                     }
-                    //var downloaded = Mathf.FloorToInt(asyncOperation.progress * 100);
-                    //if (downloaded > 0 && downloaded % 10 == 0)
-                    //{
-                    //    Interface.Oxide.LogInfo($"Downloading the translation files: {downloaded}%");
-                    //}
                     yield return null;
                 }
 
                 if (unityWebRequest.isNetworkError || unityWebRequest.isHttpError)
                 {
                     Interface.Oxide.LogError($"Failed to download translations. Code: {unityWebRequest.responseCode}. Error: {unityWebRequest.error}");
-                    //Interface.Oxide.LogInfo("Translations will download again in 10 seconds");
-                    //DoDestroy();
                     _downloadCoroutine = null;
                     yield break;
                 }
@@ -125,22 +110,10 @@ namespace Translations
                 //File.Delete(translationsZipPath);
                 Interface.Oxide.LogWarning($"Translation files were successfully downloaded({unityWebRequest.downloadedBytes / (1024f * 1024f):0.00}MB) and extracted to '{extractDirectory}'.");
                 Interface.CallHook("OnTranslationsDownloaded", initial);
-                //OnDownloaded();
                 _downloaded = true;
             }
 
             _downloadCoroutine = null;
-            //Interface.Oxide.LogError("Failed to download translations...");
         }
-
-        //public static void DoDestroy()
-        //{
-        //    //Interface.Oxide.UnloadPlugin(nameof(TranslationsDownloader));
-        //    //Interface.Oxide.UnloadExtension("Oxide.Ext.TranslationsDownloader");
-        //}
-
-        //public static void OnDownloaded()
-        //{
-        //}
     }
 }

@@ -1,3 +1,3 @@
 # TranslationsDownloader
- Translations Downloader
- Rust的翻译文件下载器
+ Translations Downloader: Download and unzip the translation file for Rust
+ 翻译文件下载器：下载并解压Rust的翻译文件

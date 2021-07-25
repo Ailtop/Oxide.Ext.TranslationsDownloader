@@ -7,7 +7,7 @@
     <ProjectGuid>{C0C6C133-FC24-4569-90B1-249376072AAD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Translations</RootNamespace>
+    <RootNamespace>Oxide.Ext.TranslationsDownloader</RootNamespace>
     <AssemblyName>Oxide.Ext.TranslationsDownloader</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

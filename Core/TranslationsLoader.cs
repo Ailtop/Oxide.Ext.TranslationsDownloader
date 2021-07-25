@@ -1,7 +1,7 @@
 ﻿using System;
 using Oxide.Core.Plugins;
 
-namespace Translations
+namespace Oxide.Ext.TranslationsDownloader
 {
     public class TranslationsLoader : PluginLoader
     {
