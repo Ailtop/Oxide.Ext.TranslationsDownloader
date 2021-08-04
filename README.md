@@ -8,3 +8,4 @@ English | [简体中文](./README.zh-CN.md)
 ​	Simply place this extension under the **RustDedicated_Data/Managed/** directory on your server path and restart your server.
 
 ​	When you start the server, the extension will automatically download and extract Rust's translation files to the **Oxide/data/Translations/** directory.
+
