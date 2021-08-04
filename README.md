@@ -1,5 +1,5 @@
 # Translations Downloader
-​	This extension mainly provides an automatic download of Rust's translation files for the [RustTranslationAPI](https://github.com/Ailtop/uModPlugins/blob/master/Plugins/RustTranslationAPI.cs) plugin.
+​	This extension provides automatic download of Rust translation files for the [RustTranslationAPI](https://github.com/Ailtop/uModPlugins/blob/master/Plugins/RustTranslationAPI.cs) plugin.
 
 ## Usage
 

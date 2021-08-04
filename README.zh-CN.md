@@ -1,5 +1,5 @@
 # 翻译下载器
-​	本扩展主要是为 [RustTranslationAPI](https://github.com/Ailtop/uModPlugins/blob/master/Plugins/RustTranslationAPI.cs) 插件提供一个自动下载Rust的翻译文件功能。
+​	本扩展主要是为 [RustTranslationAPI](https://github.com/Ailtop/uModPlugins/blob/master/Plugins/RustTranslationAPI.cs) 插件提供自动下载Rust的翻译文件功能。
 
 ## 用法
 
