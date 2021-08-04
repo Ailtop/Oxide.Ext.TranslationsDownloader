@@ -35,7 +35,10 @@
     <Reference Include=".\References\*.dll" Exclude=".\References\Newtonsoft.Json.dll">
       <Private>False</Private>
     </Reference>
-    <Compile Include=".\**\*.cs" Exclude=".\obj\**" />
+    <Compile Include="src\TranslationsDownloader.cs" />
+    <Compile Include="src\TranslationsExtension.cs" />
+    <Compile Include="src\TranslationsLoader.cs" />
+    <Compile Include=".\Properties\AssemblyInfo.cs" />
     <WCFMetadata Include="Connected Services\" />
     <None Include=".editorconfig" />
     <None Include="app.config" />
