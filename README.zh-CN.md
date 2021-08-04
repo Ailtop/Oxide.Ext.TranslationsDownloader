@@ -1,4 +1,6 @@
 # 翻译下载器
+[English]((./README.md))| [简体中文]
+
 ​	本扩展是为 [RustTranslationAPI](https://github.com/Ailtop/OxidePlugins/blob/master/Published/RustTranslationAPI/RustTranslationAPI.cs) 插件提供自动下载Rust翻译文件的功能。
 
 ## 用法
