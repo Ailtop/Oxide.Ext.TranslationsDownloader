@@ -1,4 +1,12 @@
-# TranslationsDownloader
- Translations Downloader: Download and unzip the translation files for Rust
+# Translations Downloader
+​	This extension mainly provides an automatic download of Rust's translation files for the [RustTranslationAPI](https://github.com/Ailtop/uModPlugins/blob/master/Plugins/RustTranslationAPI.cs) plugin.
 
- 翻译文件下载器：下载并解压Rust的翻译文件
+# Usage
+
+​	Simply place this extension under the **RustDedicated_Data/Managed/** folder on your server path and restart your server.
+
+​	When you start the server, the extension will automatically download and extract Rust's translation files to the **Oxide/data/Translations/** folder.
+
+
+
+[中文文档](./README.zh-CN.md)
